@@ -26,6 +26,14 @@ public class JwtService extends BaseService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public boolean validateToken(String token) {
+        try {
+            return !isTokenExpired(extractAllClaims(token));
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+
     public Long extractUserId(String token) {
         logger.debug("Extracting user id from token");
         return extractAllClaims(token).get("id", Long.class);
@@ -93,6 +101,11 @@ public class JwtService extends BaseService {
     public boolean isTokenExpired(String token) {
         logger.debug("Checking if JWT token is expired");
         return extractExpiration(token).before(new Date());
+    }
+
+    private boolean isTokenExpired(Claims claims) {
+        Date expiration = claims.getExpiration();
+        return expiration.before(new Date());
     }
 
     private Date extractExpiration(String token) {

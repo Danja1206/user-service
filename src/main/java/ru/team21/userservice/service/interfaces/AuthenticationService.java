@@ -6,4 +6,8 @@ import ru.team21.userservice.model.response.AuthenticationResponse;
 public interface AuthenticationService {
 
     AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest);
+
+    boolean verifyToken(String token);
+
+    String verifyEmail(String email);
 }

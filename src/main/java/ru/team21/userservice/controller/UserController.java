@@ -31,4 +31,15 @@ public class UserController {
     public ResponseEntity<Object> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getUserById(id));
     }
+
+    @PostMapping("/getByJwt")
+    public ResponseEntity<Object> getUserByJwt(@RequestHeader("Authorization") String token) {
+        token = token.replace("Bearer ", "");
+
+        if (!token.startsWith("Bearer ")) {
+            return ResponseEntity.ok(service.getUserId(token));
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
 }

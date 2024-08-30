@@ -77,4 +77,10 @@ public class UserServiceImpl extends BaseService implements UserService {
                 .token(jwtToken)
                 .build();
     }
+
+    @Override
+    public Long getUserId(String token) {
+        logger.info("Retrieving user id from token: {}", token);
+        return jwtService.extractUserId(token);
+    }
 }

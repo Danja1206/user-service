@@ -14,4 +14,6 @@ public interface UserService {
 
     AuthenticationResponse register(RegisterRequest registerRequest);
 
+    Long getUserId(String token);
+
 }

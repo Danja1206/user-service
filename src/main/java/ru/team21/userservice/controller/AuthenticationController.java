@@ -3,12 +3,10 @@ package ru.team21.userservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.team21.userservice.model.request.AuthenticationRequest;
 import ru.team21.userservice.model.response.AuthenticationResponse;
 import ru.team21.userservice.service.interfaces.AuthenticationService;
@@ -27,5 +25,35 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authentication(@RequestBody AuthenticationRequest request) {
         logger.info("Authentication request: {}", request);
         return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @PostMapping("/check-token")
+    public ResponseEntity<Boolean> checkToken(@RequestHeader("Authorization") String token) {
+        System.out.println("Checking token: " + token);
+
+        token = token.replace("Bearer ", "");
+
+        System.out.println(token);
+
+        if (!token.startsWith("Bearer ")) {
+            return ResponseEntity.ok(service.verifyToken(token));
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/check-username")
+    public ResponseEntity<String> checkEmail(@RequestHeader("Authorization") String token) {
+        System.out.println("Checking username: " + token);
+
+        token = token.replace("Bearer ", "");
+
+        System.out.println(token);
+
+        if (!token.startsWith("Bearer ")) {
+            return ResponseEntity.ok(service.verifyEmail(token));
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 }

@@ -59,5 +59,17 @@ public class AuthenticationServiceImpl extends BaseService implements Authentica
                 .build();
     }
 
+    @Override
+    public boolean verifyToken(String token) {
+        logger.info("Verifying token {}", token);
+        return jwtService.validateToken(token);
+    }
+
+    @Override
+    public String verifyEmail(String token) {
+        logger.info("Verifying email {}", token);
+        return jwtService.extractUsername(token);
+    }
+
 
 }
