@@ -29,17 +29,20 @@ public class AuthenticationController {
 
     @PostMapping("/check-token")
     public ResponseEntity<Boolean> checkToken(@RequestHeader("Authorization") String token) {
-        System.out.println("Checking token: " + token);
-
-        token = token.replace("Bearer ", "");
-
-        System.out.println(token);
+        logger.info("Checking token: {}", token);
 
         if (!token.startsWith("Bearer ")) {
-            return ResponseEntity.ok(service.verifyToken(token));
+            logger.warn("Invalid token format: {}", token);
+            return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.badRequest().build();
+        token = token.replace("Bearer ", "");
+        logger.debug("Token after Bearer removal: {}", token);
+
+        boolean isValid = service.verifyToken(token);
+        logger.info("Token is valid: {}", isValid);
+
+        return ResponseEntity.ok(isValid);
     }
 
     @PostMapping("/check-username")
